@@ -17,8 +17,7 @@ El soporte al plugin se realiza directamente en [GitHub](https://github.com/qvo-
 
 
 ## Instalación
-Descargar .zip de este repositorio, y subirlo en la sección "Instalar Módulos" de Prestashop.
-
+Descarga el último release [aquí](https://github.com/qvo-team/qvo-prestashop-webpay-plus/releases/latest). Luego, súbelo en la sección "Instalar Módulos" de Prestashop.
 
 ## Preguntas Frecuentes
 
