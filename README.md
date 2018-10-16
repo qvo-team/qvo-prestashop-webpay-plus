@@ -1,7 +1,7 @@
 # Prestashop QVO Payment Gateway Plugin
 **Contribuyentes:** [brunocalderon](https://github.com/brunocalderon), [matimenich](https://github.com/matimenich)
 
-**Versión estable:** 1.0
+**Versión estable:** 1.1
 
 **Licencia:** GPLv2 or later
 
@@ -17,7 +17,10 @@ El soporte al plugin se realiza directamente en [GitHub](https://github.com/qvo-
 
 
 ## Instalación
-Descarga el último release [aquí](https://github.com/qvo-team/qvo-prestashop-webpay-plus/releases/latest). Luego, súbelo en la sección "Instalar Módulos" de Prestashop.
+1. Descarga el último release [aquí](https://github.com/qvo-team/qvo-prestashop-webpay-plus/releases/latest). 
+2. Luego, descomprímelo (por lo general se descomprimirá en la carpeta qvo-prestashop-webpay-plus).
+3. Cambia el nombre de la carpeta en la cual se descomprimió por `qvopaymentgateway`
+4. Comprime la carpeta en formato .zip y súbelo en la sección "Instalar Módulos" de Prestashop.
 
 ## Preguntas Frecuentes
 
