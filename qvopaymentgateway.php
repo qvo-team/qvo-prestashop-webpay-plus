@@ -15,16 +15,15 @@ class qvopaymentgateway extends PaymentModule
 		$this->version = '1.1';
 		$this->author = 'QVO';
 		$this->bootstrap = true;
-        $this->currencies = true;
-        $this->currencies_mode = 'checkbox';
-        $this->controllers = array('payment', 'validation');
+		$this->currencies = true;
+		$this->currencies_mode = 'checkbox';
+		$this->controllers = array('payment', 'validation');
 		parent::__construct();
 
 		$this->displayName = $this->trans('QVO – Pago a través de Webpay Plus', array(), 'Modules.Qvopaymentgateway.Admin');
 		$this->description = $this->trans('Pago con Tarjetas de Crédito o Redcompra', array(), 'Modules.Qvopaymentgateway.Admin');
 		$this->confirmUninstall = $this->trans('¿Estas seguro que deseas desinstalar?', array(), 'Modules.Qvopaymentgateway.Admin');
 		$this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => _PS_VERSION_);
-
 	}
 
 	public function install()
@@ -72,7 +71,7 @@ class qvopaymentgateway extends PaymentModule
 
 	public function uninstall()
 	{
-                $sqlfile = dirname(__FILE__).'/install/uninstall.sql';
+		$sqlfile = dirname(__FILE__).'/install/uninstall.sql';
 		if(!parent::uninstall() ||  !$this->doDatabaseInstallation($sqlfile) || !$this->destroySettingData() ){
 			return false;
 		}
@@ -119,63 +118,50 @@ class qvopaymentgateway extends PaymentModule
         return true;
     }
 
-      public function hookDisplayHeader()
-    {
-        if (!$this->context) {
-            $this->context = Context::getContext();
-            }
+		public function hookDisplayHeader()
+		{
+			if (!$this->context) {
+				$this->context = Context::getContext();
+			}
 
-        if ('order' === $this->context->controller->php_self) {
-
+			if ('order' === $this->context->controller->php_self) {
         $this->context->controller->registerStylesheet(
-            'module-qvopaymentgateway-qvo',
-            'modules/'.$this->name.'/views/css/qvo.css');
-
+						'module-qvopaymentgateway-qvo',
+						'modules/'.$this->name.'/views/css/qvo.css');
         $this->context->controller->registerJavascript(
-            'module-qvopaymentgateway-qvojs',
-             'modules/'.$this->name.'/views/js/qvo.js'
-
-        );
-
-     return $this->display(__FILE__, 'displayheader.tpl');
-
-   }
-
-
+						'module-qvopaymentgateway-qvojs',
+						'modules/'.$this->name.'/views/js/qvo.js');
+				return $this->display(__FILE__, 'displayheader.tpl');
+			}
     }
 
-
-  public function hookDisplayPaymentReturn($params)
-{
-
-  if (version_compare(_PS_VERSION_, '1.7.0', '>=') === true) {
-     return $this->hookPaymentReturn($params);
-}
-  if (!$this->active)
-    return;
-
-    $this->smarty->assign(array(
+		public function hookDisplayPaymentReturn($params)
+		{
+			if (version_compare(_PS_VERSION_, '1.7.0', '>=') === true) {
+				return $this->hookPaymentReturn($params);
+			}
+  		if (!$this->active)
+    	return;
+    	$this->smarty->assign(array(
       'total_to_pay' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
       'status' => 'ok',
       'id_order' => $params['objOrder']->id,
-    ));
-    if (isset($params['objOrder']->reference) && !empty($params['objOrder']->reference))
+    	));
+
+			if (isset($params['objOrder']->reference) && !empty($params['objOrder']->reference))
       $this->smarty->assign('reference', $params['objOrder']->reference);
-
-
-  return $this->display(__FILE__, 'paymentreturn.tpl');
-}
+  		return $this->display(__FILE__, 'paymentreturn.tpl');
+		}
 
 
 
-	   public function hookPaymentReturn($params)
-    {
-
-        if (!$this->active){
-          return;
-        }
-   $currency = new Currency($params['order']->id_currency);
-   $total_to_pay = $params['order']->getOrdersTotalPaid();
+		public function hookPaymentReturn($params)
+		{
+			if (!$this->active){
+				return;
+			}
+		$currency = new Currency($params['order']->id_currency);
+		$total_to_pay = $params['order']->getOrdersTotalPaid();
 
   $state = $params['order']->getCurrentState();
     $this->smarty->assign(array(
