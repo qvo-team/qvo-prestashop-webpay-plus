@@ -1,3 +1,4 @@
+
 {capture name=path}
 {l s='QVO Payment Gateway' mod='qvopaymentgateway'}
 {/capture}
@@ -13,9 +14,8 @@
  {/foreach}
  {/if}
  {/if}
- <p class="well">{l s='There is an issue with this payment provider, please choose another payment option' mod='qvopaymentgateway'} </p>
+ <p class="well">{l s='Hay un error con el proveedor de pagos, por favor selecciona otra opcion' mod='qvopaymentgateway'} </p>
 
 </div>
 
 {/block}
-

@@ -1,5 +1,5 @@
 <?php
-if (!defined('_PS_VERSION_')){		
+if (!defined('_PS_VERSION_')){
 	exit;
 }
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
@@ -12,7 +12,7 @@ class qvopaymentgateway extends PaymentModule
 	{
 		$this->name = 'qvopaymentgateway';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'QVO';
 		$this->bootstrap = true;
         $this->currencies = true;
@@ -23,30 +23,29 @@ class qvopaymentgateway extends PaymentModule
 		$this->displayName = $this->trans('QVO – Pago a través de Webpay Plus', array(), 'Modules.Qvopaymentgateway.Admin');
 		$this->description = $this->trans('Pago con Tarjetas de Crédito o Redcompra', array(), 'Modules.Qvopaymentgateway.Admin');
 		$this->confirmUninstall = $this->trans('¿Estas seguro que deseas desinstalar?', array(), 'Modules.Qvopaymentgateway.Admin');
-        $this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => _PS_VERSION_);
+		$this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => _PS_VERSION_);
 
 	}
 
 	public function install()
-	{	
-        $sqlfile = dirname(__FILE__).'/install/install.sql';
+	{
+		$sqlfile = dirname(__FILE__).'/install/install.sql';
 		return parent::install() &&  $this->doDatabaseInstallation($sqlfile) &&
-  			$this->registerHook('footer') &&
-  			$this->registerHook('displayPaymentReturn') &&
-			$this->registerHook('adminOrder') &&
-			$this->registerHook('paymentOptions') &&
-			$this->registerHook('displayHeader') &&
-            $this->prefillConfig() &&
-  			$this->registerHook('paymentReturn');
+		$this->registerHook('footer') &&
+		$this->registerHook('displayPaymentReturn') &&
+		$this->registerHook('adminOrder') &&
+		$this->registerHook('paymentOptions') &&
+		$this->registerHook('displayHeader') &&
+		$this->registerHook('paymentReturn');
 	}
 	public function hookAdminOrder($params)
-	{	
+	{
 		$order_id=$params['id_order'];
-	
+
 		$msg = new Message();
-		 
+
 		$res=$msg->getMessagesByOrderId($order_id,true);
-		
+
 		if(is_array($res) && !empty($res))
 		{
 			$message="";
@@ -58,18 +57,18 @@ class qvopaymentgateway extends PaymentModule
 		{
 			return;
 		}
-		
+
 		$this->smarty->assign('message',$message);
 		return $this->display(__FILE__, 'tpl/orderdetail.tpl');
 	}
 
-  public function prefillConfig()
-  {
-      Configuration::updateValue('QVO_WEBPAY_PLUS_TITLE','Pago con Tarjetas de Crédito o Redcompra');
-        Configuration::updateValue('QVO_WEBPAY_PLUS_DESCR','Paga con tu tarjeta usando Webpay Plus');
+	public function prefillConfig()
+	{
+		Configuration::updateValue('QVO_WEBPAY_PLUS_TITLE','Pago con Tarjetas de Crédito o Redcompra');
+		Configuration::updateValue('QVO_WEBPAY_PLUS_DESCR','Paga con tu tarjeta usando Webpay Plus');
+		return true;
+	}
 
-        return true;
-  }
 
 	public function uninstall()
 	{
@@ -78,7 +77,7 @@ class qvopaymentgateway extends PaymentModule
 			return false;
 		}
 		return true;
-		
+
 	}
 
     public function requestData()
@@ -125,7 +124,7 @@ class qvopaymentgateway extends PaymentModule
         if (!$this->context) {
             $this->context = Context::getContext();
             }
-       
+
         if ('order' === $this->context->controller->php_self) {
 
         $this->context->controller->registerStylesheet(
@@ -135,20 +134,20 @@ class qvopaymentgateway extends PaymentModule
         $this->context->controller->registerJavascript(
             'module-qvopaymentgateway-qvojs',
              'modules/'.$this->name.'/views/js/qvo.js'
-            
+
         );
 
      return $this->display(__FILE__, 'displayheader.tpl');
-    
+
    }
- 
+
 
     }
-		
-	
+
+
   public function hookDisplayPaymentReturn($params)
 {
-  
+
   if (version_compare(_PS_VERSION_, '1.7.0', '>=') === true) {
      return $this->hookPaymentReturn($params);
 }
@@ -171,7 +170,7 @@ class qvopaymentgateway extends PaymentModule
 
 	   public function hookPaymentReturn($params)
     {
-        
+
         if (!$this->active){
           return;
         }
@@ -187,8 +186,8 @@ class qvopaymentgateway extends PaymentModule
     ));
     if (isset($params['order']->reference) && !empty($params['order']->reference))
       $this->smarty->assign('reference', $params['order']->reference);
-    
-     
+
+
 
   return $this->display(__FILE__, 'paymentreturn.tpl');
 
@@ -203,25 +202,24 @@ class qvopaymentgateway extends PaymentModule
         if (!$this->checkCurrency($params['cart'])) {
             return;
         }
- 
+
         if (!$this->context) {
             $this->context = Context::getContext();
         }
-         
-        $payment_title=(Configuration::get('QVO_WEBPAY_PLUS_TITLE') !='')?Configuration::get('QVO_WEBPAY_PLUS_TITLE') :'Pago con Tarjetas de Crédito o Redcompra';
+
+				$payment_title=(Configuration::get('QVO_WEBPAY_PLUS_TITLE') !='')?Configuration::get('QVO_WEBPAY_PLUS_TITLE') :'Pago con Tarjetas de Crédito o Redcompra';
         $payment_desc=(Configuration::get('QVO_WEBPAY_PLUS_DESCR') !='')?Configuration::get('QVO_WEBPAY_PLUS_DESCR') :'Paga con tu tarjeta usando Webpay Plus';
 
-      
         $cart = new Cart((int) $this->context->cookie->id_cart);
         $customer = new Customer((int) $this->context->customer->id);
-         $currency = new Currency((int) $cart->id_currency);
+				$currency = new Currency((int) $cart->id_currency);
 
          $carttotal = (float) $cart->getOrderTotal(true, Cart::BOTH);
 
                 $newOption = new PaymentOption();
                 // $newOption->setBinary(true)
                  $newOption->setCallToActionText($this->trans($payment_title, array(), 'Modules.QvopaymentGateway.Shop'))
-                 
+
                  ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/Logo_Webpay3-01-50x50.png'))
                  ->setAction($this->context->link->getModuleLink($this->name, 'payment'))
 
@@ -233,8 +231,8 @@ class qvopaymentgateway extends PaymentModule
 
         return $payment_options;
 
-             
-              
+
+
 
           }
 
@@ -267,26 +265,26 @@ class qvopaymentgateway extends PaymentModule
             \Configuration::updateValue('QVO_WEBPAY_PLUS_API_TOKEN_TEST', Tools::getValue('QVO_WEBPAY_PLUS_API_TOKEN_TEST'));
             \Configuration::updateValue('QVO_WEBPAY_PLUS_API_TOKEN_LIVE', Tools::getValue('QVO_WEBPAY_PLUS_API_TOKEN_LIVE'));
             \Configuration::updateValue('QVO_WEBPAY_PLUS_PAYMENT_MODE', Tools::getValue('QVO_WEBPAY_PLUS_PAYMENT_MODE'));
-          
+
             $sv = 'ok';
         }
 
         $this->context->smarty->assign(array(
-             'logoimage' => _MODULE_DIR_.$this->name.'/views/img/cc.png',
+             'logoimage' => _MODULE_DIR_.$this->name.'/views/img/Webpay50x50.png',
                     'QVO_WEBPAY_PLUS_TITLE' => \Configuration::get('QVO_WEBPAY_PLUS_TITLE'),
                     'QVO_WEBPAY_PLUS_DESCR' => \Configuration::get('QVO_WEBPAY_PLUS_DESCR'),
                     'QVO_WEBPAY_PLUS_PAYMENT_MODE' => \Configuration::get('QVO_WEBPAY_PLUS_PAYMENT_MODE'),
                     'QVO_WEBPAY_PLUS_API_TOKEN_LIVE' => \Configuration::get('QVO_WEBPAY_PLUS_API_TOKEN_LIVE'),
                     'QVO_WEBPAY_PLUS_API_TOKEN_TEST' => \Configuration::get('QVO_WEBPAY_PLUS_API_TOKEN_TEST'),
-                    
+
                     'savedok' =>$sv,
-                    
+
 ));
 
         $html = $this->display(__FILE__, 'getContent.tpl');
 
         return $html.$this->display(__FILE__, 'views/templates/admin/prestui/ps-tags.tpl');
     }
-	
+
 
 }

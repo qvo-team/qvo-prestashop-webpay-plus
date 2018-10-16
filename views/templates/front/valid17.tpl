@@ -13,9 +13,8 @@
  {/foreach}
  {/if}
  {/if}
- <p class="well">{l s='Your order could not be completed with this payment option, you can select a different payment below' mod='qvopaymentgateway'} </p>
+ <p class="well">{l s='Tu orden no puede ser completada con este proveedor de pagos. Puedes seleccionar un proveedor de pagos diferente' mod='qvopaymentgateway'} </p>
 <div class="alert alert-info" role="alert"> <a href="{$link->getPageLink('order', true)|escape:'html':'UTF-8'}?step=3" rel="nofollow" title="{l s='other Payment Option' mod='qvopaymentgateway'}">{l s='Other Payment options' mod='qvopaymentgateway'}</a> </div>
 </div>
 
 {/block}
-

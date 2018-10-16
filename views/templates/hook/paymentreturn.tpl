@@ -1,4 +1,4 @@
-{if $status == 'ok'}
+ {if $status == 'ok'}
 <p class="completed-pay">
 	<h2>{l s='Your order on ' mod='qvopaymentgateway'} {$shop_name|escape:'htmlall':'utf-8'} {l s='is complete.' mod='qvopaymentgateway'} </h2>
 		<br />
@@ -8,7 +8,7 @@
 		{else}
 			<br /><br />- {l s='Your order reference is ' mod='qvopaymentgateway'} <strong> {$reference|escape:'htmlall':'utf-8'} </strong>
 		{/if}
-	
+
 		<br /><br />{l s='If you have questions, comments or concerns, please contact our' mod='qvopaymentgateway'} <a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='expert customer support team' mod='qvopaymentgateway'}</a>.
 	</p>
 {else}

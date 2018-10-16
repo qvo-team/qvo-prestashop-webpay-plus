@@ -2,9 +2,11 @@
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-require_once dirname(__FILE__) . '/../../vendor/autoload.php';
+
+
 require_once dirname(__FILE__) . '/../../classes/Qvogateway.php';
 
+require_once dirname(__FILE__) . '/../../classes/QvoService.php';
 class QvopaymentgatewayValidationModuleFrontController extends ModuleFrontController
 {
 
@@ -24,16 +26,16 @@ class QvopaymentgatewayValidationModuleFrontController extends ModuleFrontContro
          if(!$this->context){
              $this->context == Context::getContext();
          }
-         
+
          if($this->checkIfPaid()){
             Tools::redirect($this->context->link->getPageLink('history', true));
          }
-        
 
 
-        
+
+
         $cart = new Cart((int) $this->context->cart->id);
-        
+
         if(!$this->module->active){
             $this->errorbag[] = $this->module->l('Error: This payment gateway has been disabled');
         }
@@ -42,7 +44,7 @@ class QvopaymentgatewayValidationModuleFrontController extends ModuleFrontContro
               $this->errorbag[] = $this->module->l('Error: Invalid customer and customer address');
           }
 
-    
+
         $currency = new Currency((int) $cart->id_currency);
         $customer = new Customer((int) $cart->id_customer);
 
@@ -78,7 +80,7 @@ $this->module->validateOrder($cart->id, Configuration::get('PS_OS_PAYMENT'), $ca
 
     Tools::redirect('index.php?controller=order-confirmation&id_cart=' . $cart->id . '&id_module=' . $this->module->id . '&id_order=' . $this->module->currentOrder . '&key=' . $customer->secure_key);
        exit;
-   
+
         }
 
     }
@@ -119,7 +121,7 @@ $this->module->validateOrder($cart->id, Configuration::get('PS_OS_PAYMENT'), $ca
             return true;
         }
         return false;
-         
+
     }
 
     public function processCharge()
@@ -149,13 +151,25 @@ $this->module->validateOrder($cart->id, Configuration::get('PS_OS_PAYMENT'), $ca
 
     public function getPaymentResult()
     {
+        if($this->module->name =="qvopaymentgateway"){
+
+        }
+
+
         $paymentdata = $this->module->requestData();
          try{
-        $client   = new GuzzleHttp\Client();
-        $body     = $client->request('GET', $paymentdata['base_url'] . '/transactions/' . $this->trans_id, ['headers' => ['Authorization' => 'Bearer ' . $paymentdata['apitoken']]])->getBody();
-        $response = json_decode($body);
+
+            $service = new QvoService();
+
+            $url =$paymentdata['base_url'] . '/transactions/' . $this->trans_id;
+
+         $headers[] = 'Authorization: Bearer '.$paymentdata['apitoken'];
+
+         $result = $service->httpGetIt( $headers, $url);
+        $response = json_decode($result);
+
         return $response;
-    } 
+    }
     catch(Exception $e){
         $this->errorbag[] = $this->module->l('Hubo un problema');
         return false;

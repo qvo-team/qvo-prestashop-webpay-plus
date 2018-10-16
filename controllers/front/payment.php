@@ -1,11 +1,12 @@
 <?php
-require_once dirname(__FILE__) . '/../../vendor/autoload.php';
 require_once dirname(__FILE__) . '/../../classes/Qvogateway.php';
+require_once dirname(__FILE__) . '/../../classes/QvoService.php';
 
 class QvopaymentgatewayPaymentModuleFrontController extends ModuleFrontController
 {
     public $ssl                 = true;
     public $display_column_left = false;
+    public $errorbag;
     /**
      * @see FrontController::initContent()
      */
@@ -60,6 +61,11 @@ class QvopaymentgatewayPaymentModuleFrontController extends ModuleFrontControlle
 
     public function getPaymentURL($cart)
     {
+
+        if($this->module->name =="qvopaymentgateway"){
+             require_once dirname(__FILE__) . '/../../vendor/autoload.php';
+        }
+
         $paymentdata     = $this->module->requestData();
         $return_url      = $this->context->link->getModuleLink($this->module->name, 'validation');
         $customer_id     = $cart->id . '_' . $cart->id_customer;
@@ -77,11 +83,20 @@ class QvopaymentgatewayPaymentModuleFrontController extends ModuleFrontControlle
             $product_info .= array_shift($product_in_cart)['name'];
         }
         try{
-        $client = new GuzzleHttp\Client();
+     $service = new QvoService();
+    $url =$paymentdata['base_url'] . '/webpay_plus/charge';
+    $string = json_encode(['amount' => $carttotal, 'return_url' => $return_url, 'customer_id' => $customer_id]);
 
-        $body     = $client->request('POST', $paymentdata['base_url'] . '/webpay_plus/charge', ['json' => ['amount' => $carttotal,'description'=>$product_info.' - '.Configuration::get('PS_SHOP_NAME'), 'return_url' => $return_url], 'headers' => ['Authorization' => 'Bearer ' . $paymentdata['apitoken']]])->getBody();
-        $response = json_decode($body);
-        return $response;
+    $headers[] = 'Authorization: Bearer '.$paymentdata['apitoken'];
+
+   $response =  $service->httpRequest($string, $headers, $url);
+
+
+
+   $result = json_decode($response);
+
+
+        return $result;
         }
         catch(Exception $e){
             Tools::redirect('index.php?controller=order&step=1');
