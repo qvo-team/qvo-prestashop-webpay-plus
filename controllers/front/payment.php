@@ -84,23 +84,17 @@ class QvopaymentgatewayPaymentModuleFrontController extends ModuleFrontControlle
         }
         try{
      $service = new QvoService();
-    $url =$paymentdata['base_url'] . '/webpay_plus/charge';
-    $string = json_encode(['amount' => $carttotal, 'return_url' => $return_url, 'customer_id' => $customer_id]);
+     $url =$paymentdata['base_url'] . '/webpay_plus/charge';
+     $string = json_encode(['amount' => $carttotal, 'return_url' => $return_url, 'customer_id' => $customer_id]);
+     $headers[] = 'Authorization: Bearer '.$paymentdata['apitoken'];
+     $response =  $service->httpRequest($string, $headers, $url);
 
-    $headers[] = 'Authorization: Bearer '.$paymentdata['apitoken'];
-
-   $response =  $service->httpRequest($string, $headers, $url);
-
-
-
-   $result = json_decode($response);
-
-
+     $result = json_decode($response);
         return $result;
         }
         catch(Exception $e){
             Tools::redirect('index.php?controller=order&step=1');
-        } 
+        }
 
     }
 
