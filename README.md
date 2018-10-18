@@ -1,7 +1,7 @@
 # Prestashop QVO Payment Gateway Plugin
 **Contribuyentes:** [brunocalderon](https://github.com/brunocalderon), [matimenich](https://github.com/matimenich)
 
-**Versión estable:** 1.13
+**Versión estable:** 1.14
 
 **Licencia:** GPLv2 or later
 

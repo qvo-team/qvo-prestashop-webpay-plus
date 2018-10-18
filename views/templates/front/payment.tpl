@@ -1,12 +1,11 @@
-
 {capture name=path}
-{l s='QVO Payment Gateway' mod='qvopaymentgateway'}
+{l s='QVO WebPay Plus' mod='qvopaymentgateway'}
 {/capture}
 {extends file='page.tpl'}
 {block name="notifications"}{/block}
 {block name="page_content"}
 <div class="row">
-<h3> {l s='Order Payment Option Response' mod='qvopaymentgateway'} </h3>
+<h3> {l s='Respuesta del Pago' mod='qvopaymentgateway'} </h3>
  {if isset($errbag)}
  {if !empty($errbag)}
  {foreach $errbag as $err}
@@ -14,7 +13,7 @@
  {/foreach}
  {/if}
  {/if}
- <p class="well">{l s='Hay un error con el proveedor de pagos, por favor selecciona otra opcion' mod='qvopaymentgateway'} </p>
+ <p class="well">{l s='Hay un problema con esta pasarela de pagos, por favor elija otra opción' mod='qvopaymentgateway'} </p>
 
 </div>
 

@@ -1,3 +1,3 @@
 <div class="conf confirmation">
-	{l s='Congratulations! Your order has been saved.' mod='qvowebpayplus'}
+	{l s='¡Felicidades! Su pedido ha sido guardado.' mod='qvowebpayplus'}
 </div>

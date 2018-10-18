@@ -28,7 +28,7 @@
 		{if $ps_version >= 1.6}
 
 			<div class="form-group">
-				<label class="control-label col-lg-2 { opts.required == 'true' ? 'required' : '' }">
+				<label class="control-label col-lg-3 { opts.required == 'true' ? 'required' : '' }">
 					<span class="label-tooltip" data-toggle="tooltip" data-html="true" data-original-title="{ opts.hint }" if={ opts.hint }>{ opts.label }</span>
 					<span if={ !opts.hint }>{ opts.label }</span>
 				</label>
@@ -68,7 +68,7 @@
 				<span if={ opts.prefix }>{ opts.prefix }&nbsp;</span><input type="text" size="{ opts.size }" name="{ opts.name }" value="{ opts.value }" placeholder="{ opts.placeholder }" required="{ opts.requiredInput == 'true' }"><span if={ opts.suffix }>&nbsp;{ opts.suffix }</span>
 
 			{/if}
-
+			
 	</ps-input-text-core>
 </script>
 

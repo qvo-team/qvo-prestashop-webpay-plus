@@ -1,3 +1,3 @@
 <section>
-  <p>{l s='You have selected QVO Webpay Plus Payment:' d='Modules.Qvowebplus.Shop'}</p>
+  <p>{l s='Has seleccionado QVO WebPay Plus:' d='Modules.Qvowebplus.Shop'}</p>
 </section>

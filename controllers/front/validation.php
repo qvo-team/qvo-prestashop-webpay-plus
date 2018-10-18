@@ -31,17 +31,14 @@ class QvopaymentgatewayValidationModuleFrontController extends ModuleFrontContro
             Tools::redirect($this->context->link->getPageLink('history', true));
          }
 
-
-
-
         $cart = new Cart((int) $this->context->cart->id);
 
         if(!$this->module->active){
-            $this->errorbag[] = $this->module->l('Error: This payment gateway has been disabled');
+            $this->errorbag[] = $this->module->l('Error: Esta pasarela de pago ha sido desactivada');
         }
 
           if ((int) $cart->id_customer == 0 || (int) $cart->id_address_delivery == 0 ||   (int) $cart->id_address_invoice == 0){
-              $this->errorbag[] = $this->module->l('Error: Invalid customer and customer address');
+              $this->errorbag[] = $this->module->l('Error: Cliente o direccion de cliente invalida');
           }
 
 
@@ -51,12 +48,12 @@ class QvopaymentgatewayValidationModuleFrontController extends ModuleFrontContro
         $supportedcurrency = $this->module->getCurrency((int) $this->context->cart->id_currency);
 
         if (!$this->checkSupported($supportedcurrency, $currency)) {
-            $this->errorbag[] = $this->module->l('This currency is not supported by this payment solution');
+            $this->errorbag[] = $this->module->l('Esta moneda no es soportada por esta pasarela');
             return;
         }
 
         if (!Validate::isLoadedObject($customer)) {
-            $this->errorbag[] = $this->module->l('Error: Customer data not available on cart');
+            $this->errorbag[] = $this->module->l('Error: Informacion del cliente no disponible');
             return;
         }
 
@@ -65,7 +62,7 @@ class QvopaymentgatewayValidationModuleFrontController extends ModuleFrontContro
         $extra_vars = array(
 
             '{total_paid}'     => Tools::displayPrice($carttotal),
-            '{paid_via}'       => 'QVO Payment Gateway',
+            '{paid_via}'       => 'WebPay Plus',
             '{transaction_id}' => $this->trans_id,
 
         );
@@ -138,7 +135,7 @@ $this->module->validateOrder($cart->id, Configuration::get('PS_OS_PAYMENT'), $ca
                     return true;
                 }
 
-        $this->errorbag[] = $this->module->l('Hubo un problema, por favor intentalo de nuevo');
+        $this->errorbag[] = $this->module->l('Pago no completado, por favor intente nuevamente');
 
                 return false;
             }
@@ -151,10 +148,6 @@ $this->module->validateOrder($cart->id, Configuration::get('PS_OS_PAYMENT'), $ca
 
     public function getPaymentResult()
     {
-        if($this->module->name =="qvopaymentgateway"){
-
-        }
-
 
         $paymentdata = $this->module->requestData();
          try{
@@ -171,7 +164,7 @@ $this->module->validateOrder($cart->id, Configuration::get('PS_OS_PAYMENT'), $ca
         return $response;
     }
     catch(Exception $e){
-        $this->errorbag[] = $this->module->l('Hubo un problema');
+        $this->errorbag[] = $this->module->l('No es posible conectar con la pasarela');
         return false;
     }
     }

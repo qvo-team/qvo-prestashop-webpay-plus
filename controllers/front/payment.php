@@ -62,10 +62,6 @@ class QvopaymentgatewayPaymentModuleFrontController extends ModuleFrontControlle
     public function getPaymentURL($cart)
     {
 
-        if($this->module->name =="qvopaymentgateway"){
-             require_once dirname(__FILE__) . '/../../vendor/autoload.php';
-        }
-
         $paymentdata     = $this->module->requestData();
         $return_url      = $this->context->link->getModuleLink($this->module->name, 'validation');
         $customer_id     = $cart->id . '_' . $cart->id_customer;
@@ -84,17 +80,23 @@ class QvopaymentgatewayPaymentModuleFrontController extends ModuleFrontControlle
         }
         try{
      $service = new QvoService();
-     $url =$paymentdata['base_url'] . '/webpay_plus/charge';
-     $string = json_encode(['amount' => $carttotal, 'return_url' => $return_url, 'customer_id' => $customer_id]);
-     $headers[] = 'Authorization: Bearer '.$paymentdata['apitoken'];
-     $response =  $service->httpRequest($string, $headers, $url);
+    $url =$paymentdata['base_url'] . '/webpay_plus/charge';
+    $string = json_encode(['amount' => $carttotal, 'return_url' => $return_url, 'customer_id' => $customer_id]);
 
-     $result = json_decode($response);
+    $headers[] = 'Authorization: Bearer '.$paymentdata['apitoken'];
+
+   $response =  $service->httpRequest($string, $headers, $url);
+
+
+
+   $result = json_decode($response);
+
+
         return $result;
         }
         catch(Exception $e){
             Tools::redirect('index.php?controller=order&step=1');
-        }
+        } 
 
     }
 
